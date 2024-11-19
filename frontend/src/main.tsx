@@ -15,20 +15,26 @@ import { Provider } from "react-redux";
 import AdminOutlet from "./pages/admin/AdminOutlet.tsx";
 // ======================== Admin Pages ========================
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin.tsx"));
-const AdminMain = lazy(() => import("./pages/admin/AdminMain.tsx"));
-const AdminSearch = lazy(() => import("./pages/admin/AdminSearch.tsx"));
+const AdminMain = lazy(() => import("./pages/admin/search/main/AdminMain.tsx"));
+const AdminSearch = lazy(
+  () => import("./pages/admin/search/result/AdminSearch.tsx")
+);
 //  create pages
-const CreateLiquor = lazy(() => import("./pages/admin/CreateLiquor.tsx"));
-const CreateBrand = lazy(() => import("./pages/admin/CreateBrand.tsx"));
-const CreateProducer = lazy(() => import("./pages/admin/CreateProducer.tsx"));
-const CreateCardnews = lazy(() => import("./pages/admin/CreateCardnews.tsx"));
+const CreateLiquor = lazy(() => import("./pages/admin/create/liquor"));
+const CreateBrand = lazy(() => import("./pages/admin/create/brand"));
+const CreateProducer = lazy(() => import("./pages/admin/create/producer"));
+const CreateCardnews = lazy(() => import("./pages/admin/create/cardnews"));
 
 // ======================== User Pages ========================
-const SearchMain = lazy(() => import("./pages/user/MainSearch.tsx"));
-const SearchResult = lazy(() => import("./pages/user/SearchResult.tsx"));
-const LiqourDetail = lazy(() => import("./pages/user/LiqourDetail.tsx"));
-const CardnewsMain = lazy(() => import("./pages/user/CardNewsMain.tsx"));
-const CardnewsDetail = lazy(() => import("./pages/user/CardNewsDetail.tsx"));
+const SearchMain = lazy(() => import("./pages/user"));
+const SearchResult = lazy(() => import("./pages/user/liquor/SearchResult.tsx"));
+const LiqourDetail = lazy(() => import("./pages/user/liquor/LiqourDetail.tsx"));
+const CardnewsMain = lazy(
+  () => import("./pages/user/cardnews/CardNewsMain.tsx")
+);
+const CardnewsDetail = lazy(
+  () => import("./pages/user/cardnews/CardNewsDetail.tsx")
+);
 
 const router = createBrowserRouter([
   {
@@ -82,22 +88,27 @@ const router = createBrowserRouter([
         ],
       },
       {
+        path: "/",
+        index: true,
+        element: <SearchMain />,
+      },
+      {
         path: "/search",
         element: <SearchResult />,
       },
       {
         path: "/liquor/:idx",
         id: "liquor",
-        loader: async ({ request, params }) => {
-          // const {liquorId, brandId} = location.state;
-          const liquor = await getLiquor({ id: params.idx });
-          const brand = await getLiquorBrand({ id: liquor.data.id }); // 브랜드 값으로 변경해야함
+        // loader: async ({ request, params }) => {
+        //   // const {liquorId, brandId} = location.state;
+        //   const liquor = await getLiquor({ id: params.idx });
+        //   const brand = await getLiquorBrand({ id: liquor.data.id }); // 브랜드 값으로 변경해야함
 
-          return {
-            liquor: liquor.data,
-            brand: brand.data,
-          };
-        },
+        //   return {
+        //     liquor: liquor.data,
+        //     brand: brand.data,
+        //   };
+        // },
         element: <LiqourDetail />,
       },
       {
@@ -109,11 +120,6 @@ const router = createBrowserRouter([
         element: <CardnewsDetail />,
       },
     ],
-  },
-  {
-    path: "/",
-    index: true,
-    element: <SearchMain />,
   },
 ]);
 

@@ -4,7 +4,7 @@ import Topbar from "./components/Topbar";
 
 function App() {
   return (
-    <div className="flex flex-col min-h-screen bg-[var(--maincolor)]">
+    <div className="h-dvh">
       <Topbar />
       <Outlet />
     </div>

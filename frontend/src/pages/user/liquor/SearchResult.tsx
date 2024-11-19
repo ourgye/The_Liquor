@@ -4,7 +4,6 @@ import {
   Select,
   SelectContent,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -18,31 +17,31 @@ import { useAppSelector } from "@/hooks";
 export default function SearchResult() {
   const url = window.location.href;
   const navigate = useNavigate();
-  const searchTerm = useAppSelector((state)=>state.search.term);
+  const searchTerm = useAppSelector((state) => state.search.term);
   const params = parseURLtoParams(url);
 
   const [checked, setChecked] = useState(true);
   const [response, setResponse] = useState();
 
-  const handleCheckChange = (checked: boolean) => {
-    navigate({
-      pathname: "/search",
-      search: createSearchParams({
-        ...params,
-        avail: checked ? "true" : "false",
-      }).toString(),
-    }),
-      setChecked(checked);
-  };
+  // const handleCheckChange = (checked: boolean) => {
+  //   navigate({
+  //     pathname: "/search",
+  //     search: createSearchParams({
+  //       ...params,
+  //       avail: checked ? "true" : "false",
+  //     }).toString(),
+  //   }),
+  //     setChecked(checked);
+  // };
 
-  useEffect(() => {
-    searchLiquor({ params }).then((value) => {
-      setResponse(value.data);
-    });
-  }, [checked, searchTerm]);
+  // useEffect(() => {
+  //   searchLiquor({ params }).then((value) => {
+  //     setResponse(value.data);
+  //   });
+  // }, [checked, searchTerm]);
 
   return (
-    <div className="pt-24 bg-[var(--maincolor)] px-10">
+    <div className="pt-24 px-10">
       {/* <h1 className="text-3xl text-center">Search Result</h1> */}
       <div className="flex flex-row w-full gap-4">
         <SearchFilter searchTerm={params.term} />
@@ -52,7 +51,7 @@ export default function SearchResult() {
             <div className="flex flex-row gap-2 justify-center items-center">
               <Switch
                 id="domestic"
-                onCheckedChange={handleCheckChange}
+                // onCheckedChange={handleCheckChange}
                 checked={checked}
               />
               <Label htmlFor="domestic" className="font-normal">
