@@ -1,19 +1,5 @@
 import { useNavigate } from "react-router-dom";
 
-type LiqourSearchItemProps = {
-  id: string;
-  korean_name: string;
-  english_name: string;
-  alcohol: number;
-  classifications: string;
-  image_path: string;
-};
-
-interface LiqourSearchItemResponse {
-  page: number;
-  liquor_list: LiqourSearchItemProps[];
-}
-
 export default function LiqourSearchItem({
   data,
 }: {
