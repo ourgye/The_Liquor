@@ -13,15 +13,46 @@ export default function AddItemButton() {
         variant={visibleButtons ? "outline" : "default"}
         onClick={() => setVisibleButtons(!visibleButtons)}
       >
-
         추가
       </Button>
       {visibleButtons && (
         <div className="space-x-2">
-          <Button size="sm" type="button" onClick={()=>{navigate('/admin/createliquor')}}>술</Button>
-          <Button size="sm" type="button" onClick={()=>{navigate('/admin/createproducer')}}>생산자</Button>
-          <Button size="sm" type="button" onClick={()=>{navigate('/admin/createbrand')}}>브랜드</Button>
-          <Button size="sm" type="button" onClick={()=>{navigate('/admin/createcardnews')}}>카드뉴스</Button>
+          <Button
+            size="sm"
+            type="button"
+            onClick={() => {
+              navigate("/admin/createliquor");
+            }}
+          >
+            술
+          </Button>
+          <Button
+            size="sm"
+            type="button"
+            onClick={() => {
+              navigate("/admin/createproducer");
+            }}
+          >
+            생산자
+          </Button>
+          <Button
+            size="sm"
+            type="button"
+            onClick={() => {
+              navigate("/admin/createbrand");
+            }}
+          >
+            브랜드
+          </Button>
+          <Button
+            size="sm"
+            type="button"
+            onClick={() => {
+              navigate("/admin/createcardnews");
+            }}
+          >
+            카드뉴스
+          </Button>
         </div>
       )}
     </div>

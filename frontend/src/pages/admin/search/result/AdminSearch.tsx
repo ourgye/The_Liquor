@@ -13,6 +13,13 @@ interface SearchResult {
   itemList: SearchItem[];
 }
 
+const searchTypeKR: Record<string, string> = {
+  liquor: "술",
+  producer: "생산자",
+  brand: "브랜드",
+  cardnews: "카드뉴스",
+};
+
 export default function AdminSearch({
   searchType,
 }: {
@@ -29,10 +36,10 @@ export default function AdminSearch({
   });
 
   return (
-    <div>
-      <div className="flex flex-row border-neutral-950 border-b-2 justify-center items-center px-1">
+    <>
+      <div className="flex flex-row border-neutral-950 border-b-2 justify-center items-center sm:px-1">
         <div className="size-6 flex items-center justify-center self-center">
-          <AiOutlineSearch className="fill-black stroke-2 size-5" />
+          <AiOutlineSearch className="fill-black stroke-2 size-4" />
         </div>
         <Input
           type="search"
@@ -40,10 +47,10 @@ export default function AdminSearch({
             focus-visible:ring-0 focus-visible:ring-offset-0"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          placeholder={`검색할 ${searchType}을(를) 입력하세요`}
+          placeholder={`검색할 ${searchTypeKR[searchType]}을(를) 입력하세요`}
         />
       </div>
-      <div className="flex flex-col bg-slate-100 mt-4 py-1 rounded-xl  overflow-clip">
+      <div className="flex flex-col bg-white mt-4 py-1 rounded-xl overflow-clip">
         {searchResult?.itemList.map((result) => (
           <>
             <div
@@ -51,15 +58,15 @@ export default function AdminSearch({
               className="p-2 flex flex-row justify-between items-center px-4"
             >
               <span className="text-base">{result.title}</span>
-              <AiOutlineEdit className="fill-slate-600 stroke-1 size-4 cursor-pointer hover:fill-black" />
+              <AiOutlineEdit className="stroke-1 size-4 cursor-pointer hover:fill-black" />
             </div>
             {result.id !==
               searchResult.itemList[searchResult.itemList.length - 1].id && (
-              <hr className="border-t-2 mx-2" />
+              <hr className="border-t-1 mx-2" />
             )}
           </>
         ))}
       </div>
-    </div>
+    </>
   );
 }

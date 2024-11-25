@@ -1,21 +1,24 @@
-import { StrictMode } from "react";
+import { StrictMode, Suspense, lazy } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  redirect,
+  RouterProvider,
+} from "react-router-dom";
 
-import { lazy } from "react";
-
-import { getLiquor, searchLiquor } from "./services/liquor.ts";
-import { getLiquorBrand } from "./services/brand.ts";
 import { store } from "@/store.ts";
 import { Provider } from "react-redux";
 
 // code spliting
 import AdminOutlet from "./pages/admin/AdminOutlet.tsx";
+import AdminMain from "./pages/admin/search/main/AdminMain.tsx";
+import { LiquorDetailBrandResponse, LiquorDetailResponse } from "./types";
+
 // ======================== Admin Pages ========================
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin.tsx"));
-const AdminMain = lazy(() => import("./pages/admin/search/main/AdminMain.tsx"));
 const AdminSearch = lazy(
   () => import("./pages/admin/search/result/AdminSearch.tsx")
 );
@@ -41,31 +44,33 @@ const router = createBrowserRouter([
     path: "/",
     element: <App />,
     children: [
+      { path: "login", element: <AdminLogin /> },
       {
-        path: "/admin",
+        path: "admin",
         element: <AdminOutlet />,
         children: [
-          { path: "login", element: <AdminLogin />, index: true },
           {
-            path: "config",
             element: <AdminMain />,
             children: [
               {
-                path: "liquor",
-                index: true,
+                path: "search/liquor",
                 element: <AdminSearch searchType="liquor" />,
               },
               {
-                path: "brand",
+                path: "search/brand",
                 element: <AdminSearch searchType="brand" />,
               },
               {
-                path: "producer",
+                path: "search/producer",
                 element: <AdminSearch searchType="producer" />,
               },
               {
-                path: "cardnews",
+                path: "search/cardnews",
                 element: <AdminSearch searchType="cardnews" />,
+              },
+              {
+                index,
+                element: <Navigate to={"search/liquor"} />,
               },
             ],
           },
@@ -88,7 +93,6 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: "/",
         index: true,
         element: <SearchMain />,
       },
@@ -99,16 +103,41 @@ const router = createBrowserRouter([
       {
         path: "/liquor/:idx",
         id: "liquor",
-        // loader: async ({ request, params }) => {
-        //   // const {liquorId, brandId} = location.state;
-        //   const liquor = await getLiquor({ id: params.idx });
-        //   const brand = await getLiquorBrand({ id: liquor.data.id }); // 브랜드 값으로 변경해야함
-
-        //   return {
-        //     liquor: liquor.data,
-        //     brand: brand.data,
-        //   };
-        // },
+        loader: async ({ request, params }) => {
+          // const liquor = await getLiquor(params.idx);
+          // const brand = await getLiquorBrand(request.brandId); // 브랜드 값으로 변경해야함
+          const liquor: LiquorDetailResponse = {
+            id: "1",
+            producer: "Chateau de Bordeaux",
+            brand: "Bordeaux Red",
+            classifications: "Red Wine",
+            korean_name: "보르도 레드 와인",
+            english_name: "Bordeaux Red Wine",
+            count: "100",
+            alcohol: 13.5,
+            aged: "2 years",
+            price: 45000,
+            ibu: 10,
+            is_domestic_sale: true,
+            description:
+              "A classic red wine from the Bordeaux region, aged for two years for a smooth, rich flavor.",
+            updated_at: "2024-10-15T12:30:00Z",
+            adv: "Enjoy with red meats or soft cheeses.",
+            image_path: "https://picsum.photos/1000/1000",
+          };
+          const brand: LiquorDetailBrandResponse = {
+            id: "2",
+            name: "Chateau de Bordeaux",
+            classification_name: "Wine",
+            image_path: "https://picsum.photos/300/200",
+          };
+          return {
+            liquor: liquor,
+            brand: brand,
+            // liquor: liquor.data,
+            // brand: brand.data,
+          };
+        },
         element: <LiqourDetail />,
       },
       {
@@ -126,7 +155,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Provider store={store}>
-      <RouterProvider router={router} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <RouterProvider router={router} />
+      </Suspense>
     </Provider>
   </StrictMode>
 );

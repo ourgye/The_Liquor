@@ -1,23 +1,16 @@
 import classfications from "@/assets/classfication.json";
 import { Checkbox } from "./ui/checkbox";
 import { useEffect, useState } from "react";
-import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "@/hooks";
-
-type classficationType = {
-  id: number;
-  name: string;
-  parent_id?: number | null;
-  children?: classficationType[];
-};
+import { BiChevronDown, BiChevronUp } from "react-icons/bi";
+import { ClassificationType } from "@/types";
 
 function ClassificationItem({
   item,
   parentChecked = false,
   onCheckChange,
 }: {
-  item: classficationType;
+  item: ClassificationType;
   parentChecked?: boolean;
   onCheckChange: (childId: number, childChecked: boolean) => void;
 }) {
@@ -85,7 +78,7 @@ export default function SearchFilter({ searchTerm }: { searchTerm: string }) {
       setClickedClassifications([...classSet].sort((a, b) => a - b));
     } else {
       setClickedClassifications(
-        clickedClassifications.filter((item) => item !== id),
+        clickedClassifications.filter((item) => item !== id)
       );
     }
   };
@@ -101,8 +94,8 @@ export default function SearchFilter({ searchTerm }: { searchTerm: string }) {
       {/* <span className="text-xl">상세 검색</span> */}
       <div className="text-sm px-1 py-2 h-fit bg-white rounded-xl">
         <span className="font-base text-base flex justify-center">주종</span>
-        <hr className="border-black border-t-1 mb-2"/>
-        {classfications.classifications.map((item: classficationType) => (
+        <hr className="border-black border-t-1 mb-2" />
+        {classfications.classifications.map((item: ClassificationType) => (
           <ClassificationItem
             key={item.id}
             item={item}

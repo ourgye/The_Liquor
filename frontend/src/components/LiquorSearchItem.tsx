@@ -1,3 +1,4 @@
+import { LiqourSearchItemProps } from "@/types";
 import { useNavigate } from "react-router-dom";
 
 export default function LiqourSearchItem({

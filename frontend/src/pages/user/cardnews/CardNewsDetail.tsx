@@ -6,15 +6,9 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/zoom";
 
-import "./swiperStyle.css";
+import "../../swiperStyle.css";
 import { useEffect, useState } from "react";
 
-// {
-// ”classifications”:,
-// ”title”:,
-// ”image_count”:,
-// ”image_path”:[”path”, “path”],
-// }
 type CardNewsDetailProps = {
   classifications: string;
   title: string;
@@ -41,7 +35,6 @@ export default function CardNewsDetail({
 }) {
   const [isImgFull, setIsImgFull] = useState(false);
   const handleImgClick = () => {
-    console.log("img click");
     setIsImgFull(!isImgFull);
   };
 
@@ -60,7 +53,7 @@ export default function CardNewsDetail({
   }, []);
 
   return (
-    <div className={"lg:mx-64 md:mx-32 my-2 mx-2 pt-24"}>
+    <div className={"lg:mx-64 md:mx-32 mx-2 pt-24"}>
       {isImgFull && (
         <div className="fixed top-0 left-0 w-screen bg-slate-500 h-screen z-2 bg-opacity-30 backdrop-blur"></div>
       )}
@@ -91,7 +84,9 @@ export default function CardNewsDetail({
         {item.image_path.map((path, index) => (
           <SwiperSlide key={index} onClick={handleImgClick}>
             <img
-              className={`m-8 size-96 rounded-sm ${isImgFull ? "md:w-[36rem] md:h-[36rem]" : ""}`}
+              className={`m-8 size-96 rounded-sm ${
+                isImgFull ? "md:w-[36rem] md:h-[36rem]" : ""
+              }`}
               src={path}
               alt="card-news"
             />

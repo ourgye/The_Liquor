@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "@/store";
 import { LiqourSearchItemResponse, SearchLiqourParams } from "@/types";
 import { searchLiquor } from "@/services/liquor";
+import { RootState } from "@/store";
 
 interface SearchState {
   params: SearchLiqourParams;
   loading: boolean;
-  result: LiqourSearchItemResponse;
+  result: LiqourSearchItemResponse | undefined;
 }
 
 const initialState: SearchState = {
@@ -16,10 +16,10 @@ const initialState: SearchState = {
     avail: true,
   },
   loading: false,
-  result: [],
+  result: undefined,
 };
 
-const searchAsyncAction = createAsyncThunk(
+const fetchSearchResult = createAsyncThunk(
   "search/fetchliquor",
   async (params: SearchLiqourParams) => {
     const response = await searchLiquor(params);
@@ -43,6 +43,11 @@ export const searchSlice = createSlice({
     setParamMaxAlc: (state, action: PayloadAction<number>) => {
       state.params.alcMax = action.payload;
     },
+    setParamAlcRange: (state, action: PayloadAction<number[]>) => {
+      if (action.payload.length !== 2) return;
+      state.params.alcMin = action.payload[0];
+      state.params.alcMax = action.payload[1];
+    },
     setBrandChange: (state, action: PayloadAction<string>) => {
       state.params.brand = action.payload;
     },
@@ -54,7 +59,24 @@ export const searchSlice = createSlice({
     },
     resetAll: (state) => {
       state = initialState;
+      return state;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchSearchResult.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(
+        fetchSearchResult.fulfilled,
+        (state, action: PayloadAction<LiqourSearchItemResponse>) => {
+          state.loading = false;
+          state.result = action.payload;
+        }
+      )
+      .addCase(fetchSearchResult.rejected, (state) => {
+        state.loading = false;
+      });
   },
   selectors: {
     paramsSelector: (state) => state.params,
@@ -65,9 +87,14 @@ export const searchSlice = createSlice({
     brandSelector: (state) => state.params.brand,
     classSelector: (state) => state.params.class,
     availSelector: (state) => state.params.avail,
+    searchResultDataSelector: (state) => state.result?.liquor_list || [],
+    searchResultPageSelector: (state) => state.result?.page || undefined,
   },
 });
 
-export const searchSelector = searchSlice.selectors;
+export const searchAsyncAction = { fetchSearchResult };
+export const searchSelector = searchSlice.getSelectors(
+  (state: RootState) => state.search
+);
 export const searchAction = searchSlice.actions;
 export default searchSlice.reducer;

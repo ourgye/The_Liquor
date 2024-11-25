@@ -11,57 +11,40 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import {
-  createSearchParams,
-  useLocation,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from "react-router-dom";
-import { parseURLtoParams, searchLiquor } from "@/services/liquor";
-import { useEffect, useState } from "react";
-import { useAppSelector } from "@/hooks";
+import { useSearchParams } from "react-router-dom";
 import { orderList } from "@/assets/constant";
+import { useSearch } from "@/hooks/useSearch";
 
 export default function SearchResult() {
-  let [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const searchTerm = useAppSelector((state) => state.search.term);
-  const params = parseURLtoParams(window.location.href);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [checked, setChecked] = useState(true);
-  const [response, setResponse] = useState();
+  const {
+    searchTerm,
+    searchAvail,
+    setSearchAvail,
+    searchResultData,
+    searchParams: searchParams_s,
+  } = useSearch();
 
-  // const handleCheckChange = (checked: boolean) => {
-  //   navigate({
-  //     pathname: "/search",
-  //     search: createSearchParams({
-  //       ...params,
-  //       avail: checked ? "true" : "false",
-  //     }).toString(),
-  //   }),
-  //     setChecked(checked);
-  // };
-
-  // useEffect(() => {
-  //   searchLiquor({ params }).then((value) => {
-  //     setResponse(value.data);
-  //   });
-  // }, [checked, searchTerm]);
+  const handleDomesticAvailChange = (checked: boolean) => {
+    setSearchAvail(checked);
+    searchParams.set("avail", checked ? "true" : "false");
+    setSearchParams(searchParams);
+  };
 
   return (
     <div className="pt-24 px-10">
       <div className="flex flex-row w-full gap-4">
         {/* ========================= 분류 선택 ========================= */}
-        <SearchFilter searchTerm={params.term} />
+        <SearchFilter searchTerm={searchTerm} />
         <div className="w-full space-y-2">
           <div className="flex flex-row w-full justify-between">
             {/* ========================= 국내 판매 여부 토글 ========================= */}
             <div className="flex flex-row gap-2 justify-center items-center">
               <Switch
                 id="domestic"
-                // onCheckedChange={handleCheckChange}
-                checked={checked}
+                onCheckedChange={handleDomesticAvailChange}
+                checked={searchAvail}
               />
               <Label htmlFor="domestic" className="font-normal">
                 국내 판매
@@ -86,12 +69,13 @@ export default function SearchResult() {
           </div>
           {/* ============================= 검색 결과 ============================= */}
           <div className="flex flex-row flex-wrap gap-2">
-            {response?.liquor_list?.length
-              ? response.liquor_list.map((item: any) => (
+            {searchResultData && searchResultData.length > 0
+              ? searchResultData.map((item) => (
                   <LiqourSearchItem key={item.id} data={item} />
                 ))
               : "검색 결과가 없습니다."}
           </div>
+          {/* ============================= 확인용 ============================= */}
           <div id="target" className="h-1 bg-red-50" />
         </div>
       </div>

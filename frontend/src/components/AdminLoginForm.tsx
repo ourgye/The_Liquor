@@ -15,14 +15,12 @@ import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
-  id: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
+  id: z.string().min(5),
   password: z.string().min(8).max(50),
 });
 
 export default function AdminLoginForm() {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -34,12 +32,13 @@ export default function AdminLoginForm() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     // 화면 네비게이션
-    console.log(values)
-    navigate('../config'); 
+    console.log(values);
+    navigate("/admin/main");
   }
 
   return (
     <Form {...form}>
+      <h1 className="text-xl font-bold mb-2">관리자 로그인</h1>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
         <FormField
           control={form.control}
@@ -47,10 +46,9 @@ export default function AdminLoginForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>아이디</FormLabel>
-              <FormControl >
+              <FormControl>
                 <Input placeholder="아이디를 입력해주세요" {...field} />
               </FormControl>
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -61,13 +59,20 @@ export default function AdminLoginForm() {
             <FormItem>
               <FormLabel>비밀번호</FormLabel>
               <FormControl>
-                <Input placeholder="아이디를 입력해주세요" {...field} type="password"/>
+                <Input
+                  placeholder="아이디를 입력해주세요"
+                  {...field}
+                  type="password"
+                />
               </FormControl>
-              <FormMessage />
             </FormItem>
           )}
         />
-        <Button className="w-full" type="submit">로그인</Button>
+        <div>
+          <Button className="w-full mt-4" type="submit">
+            로그인
+          </Button>
+        </div>
       </form>
     </Form>
   );

@@ -1,44 +1,14 @@
-// {
-//     ”id”:,
-//     ”producer”:,
-//     ”brand”:,
-//     ”classifications”:,
-//     ”korean_name”:,
-//     ”english_name”:,
-//     ”count”:,
-//     ”alcohol”:,
-//     ”aged”:,
-//     ”price”:,
-//     ”ibu”:,
-//     ”is_domestic_sale”:,
-//     ”description”:,
-//     ”updated_at”:,
-//     ”adv”:,
-//     }
-
 import { useLoaderData, useNavigate } from "react-router-dom";
-
-type LiqourDetailRespone = {
-  id: string;
-  producer: string;
-  brand: string;
-  classfications: string;
-  korean_name: string;
-  english_name: string;
-  count: string;
-  alcohol: number;
-  aged: string;
-  price: number;
-  ibu: number;
-  is_domestic_sale: boolean;
-  description: string;
-  updated_at: string;
-  adv: string;
-};
+import { LiquorDetailResponse, LiquorDetailBrandResponse } from "@/types";
 
 export default function LiqourDetail() {
-  const { liquor, brand } = useLoaderData();
+  const data = useLoaderData() as {
+    liquor: LiquorDetailResponse;
+    brand: LiquorDetailBrandResponse;
+  };
+  const [liquor, brand] = [data.liquor, data.brand];
   const naviagte = useNavigate();
+
   const itemTitleClassName = "text-sm text-slate-800";
 
   const handleBrandClick = () => {

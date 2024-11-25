@@ -2,14 +2,12 @@ import AddItemButton from "@/components/AddItemButton";
 import { NavLink, Outlet } from "react-router-dom";
 
 export default function AdminMain() {
-  const configUrl = "/admin/config/";
-
   return (
-    <div className="px-10 py-2 space-y-2 mt-2">
+    <div className="px-4 md:px-8 space-y-2">
       <AddItemButton />
-      <nav className="flex flex-row gap-4 justify-center py-2 text-xl">
+      <nav className="flex flex-row gap-4 justify-center py-2 text-base md:text-lg">
         <NavLink
-          to={configUrl + "liquor"}
+          to={"search/liquor"}
           className={({ isActive, isPending }) => {
             return isPending
               ? "bg-slate-600"
@@ -21,7 +19,7 @@ export default function AdminMain() {
           술
         </NavLink>
         <NavLink
-          to={configUrl + "producer"}
+          to={"search/producer"}
           className={({ isActive, isPending }) => {
             return isPending
               ? "bg-slate-600"
@@ -33,7 +31,7 @@ export default function AdminMain() {
           생산자
         </NavLink>
         <NavLink
-          to={configUrl + "brand"}
+          to={"search/brand"}
           className={({ isActive, isPending }) => {
             return isPending
               ? "bg-slate-600"
@@ -45,7 +43,7 @@ export default function AdminMain() {
           브랜드
         </NavLink>
         <NavLink
-          to={configUrl + "cardnews"}
+          to={"search/cardnews"}
           className={({ isActive, isPending }) => {
             return isPending
               ? "bg-slate-600"

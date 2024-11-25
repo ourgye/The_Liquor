@@ -1,25 +1,22 @@
 import { Input } from "@/components/ui/input";
-import { useAppDispatch, useAppSelector } from "@/hooks";
-import { resetAll, termChange } from "@/slices/searchSlice";
-import { useEffect, useState } from "react";
+import { useSearch } from "@/hooks/useSearch";
+import { useEffect } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
-import { createSearchParams, redirect, useNavigate } from "react-router-dom";
+import { createSearchParams, useNavigate } from "react-router-dom";
 
 export default function MainSearch() {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const [searchTerm, setSearchTerm] = useState("");
+  const { resetAll, setSearchTerm, searchTerm } = useSearch();
 
   // mainsearch로 돌아오면 검색값 무조건 리셋
   useEffect(() => {
-    dispatch(resetAll());
+    resetAll();
   }, []);
 
   const handleSearch = () => {
-    dispatch(termChange(searchTerm));
     navigate({
       pathname: "search",
-      search: `?${createSearchParams({ term: searchTerm }).toString()}`,
+      search: `${createSearchParams({ term: searchTerm }).toString()}`,
     });
   };
 
